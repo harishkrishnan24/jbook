@@ -6,6 +6,8 @@ interface LocalApiError {
   code: string;
 }
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const isLocalApiError = (err: any): err is LocalApiError => {
   return typeof err.code === "string";
 };
@@ -17,7 +19,12 @@ export const serveCommand = new Command()
   .action(async (filename = "notebook.js", options: { port: string }) => {
     try {
       const dir = path.join(process.cwd(), path.dirname(filename));
-      await serve(parseInt(options.port), path.basename(filename), dir);
+      await serve(
+        parseInt(options.port),
+        path.basename(filename),
+        dir,
+        !isProduction
+      );
       console.log(
         `Opened ${filename} at http://localhost:${options.port}/ in your browser. Press Ctrl + click to edit. Use Ctrl + C to stop the server.`
       );
