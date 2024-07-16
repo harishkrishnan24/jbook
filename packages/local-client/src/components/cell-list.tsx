@@ -6,7 +6,7 @@ import "./cell-list.css";
 import { useActions } from "../hooks/use-actions";
 
 const CellList: React.FC = () => {
-  const { fetchCells, saveCells } = useActions();
+  const { fetchCells } = useActions();
   const cells = useTypedSelector(({ cells: { order, data } }) => {
     return order.map((id) => data[id]);
   });
@@ -14,10 +14,6 @@ const CellList: React.FC = () => {
   useEffect(() => {
     fetchCells();
   }, []);
-
-  useEffect(() => {
-    saveCells();
-  }, [JSON.stringify(cells)]);
 
   const renderedCells = cells.map((cell) => (
     <React.Fragment key={cell.id}>
