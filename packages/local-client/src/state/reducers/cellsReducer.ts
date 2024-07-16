@@ -60,6 +60,28 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       state.order[targetIndex] = action.payload.id;
 
       return state;
+
+    case ActionType.FETCH_CELLS:
+      state.loading = true;
+      state.error = null;
+      return state;
+    case ActionType.FETCH_CELLS_COMPLETE:
+      state.loading = false;
+      state.error = null;
+      state.order = action.payload.map((cell) => cell.id);
+      state.data = action.payload.reduce((acc, cell) => {
+        acc[cell.id] = cell;
+        return acc;
+      }, {} as CellsState["data"]);
+      return state;
+    case ActionType.FETCH_CELLS_ERROR:
+      state.loading = false;
+      state.error = action.payload;
+      return state;
+
+    case ActionType.SAVE_CELLS_ERROR:
+      state.error = action.payload;
+      return state;
     default:
       return state;
   }
